@@ -209,7 +209,7 @@ var deleteTask = function(taskId) {
     }
     // reassign tasks array to be the same as updatedTaskArr
     tasks = updatedTaskArr;
-}
+}//
 
 // Change/Update the status of a task
 var taskStatusChangeHandler = function(event) {
