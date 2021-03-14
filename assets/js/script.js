@@ -102,15 +102,34 @@ var createTaskEl = function(taskDataObj) {
     taskDataObj.id = taskIdCounter;
     // add tasjDataObj object to tasks Array (Global)
     tasks.push(taskDataObj);
-    // Save and Update localStorage
-    saveTasks();
 
     // create Buttons with createTaskActions Function
     var taskActionsEl = createTaskActions(taskIdCounter)
     listItemEl.appendChild(taskActionsEl);
 
-    // append listItemEl <li> to tasksToDoEl <ul>
-    tasksToDoEl.appendChild(listItemEl);
+    // Replaced by Switch Case?
+        //  append listItemEl <li> to tasksToDoEl <ul>
+        // tasksToDoEl.appendChild(listItemEl);
+
+    switch (taskDataObj.status) {
+        case "to do":
+            taskActionsEl.querySelector("select[name='status-change']").selectedIndex = 0;
+            tasksToDoEl.append(listItemEl);
+            break;
+        case "in progress":
+            taskActionsEl.querySelector("select[name='status-change']").selectedIndex = 1;
+            tasksInProgressEl.append(listItemEl);
+            break;
+        case "completed":
+            taskActionsEl.querySelector("select[name='status-change']").selectedIndex = 2;
+            tasksCompletedEl.append(listItemEl);
+            break;
+        default:
+            console.log("Something went wrong!");
+    }
+
+    // Save and Update localStorage
+    saveTasks();
 
     // increase task counter for next unique id
     taskIdCounter++;
@@ -159,7 +178,6 @@ var createTaskActions = function(taskId) {
     return actionContainerEl
 }
 
-formEl.addEventListener("submit", taskFormHandler);
 
 var taskButtonHandler = function(event) {
     // get target element from event
@@ -244,7 +262,7 @@ var taskStatusChangeHandler = function(event) {
     }
     // Save and Update localStorage
     saveTasks();
-}
+};
 
 var saveTasks = function() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -266,8 +284,13 @@ var loadTasks = function() {
     }
 }
 
+// Create a new task
+formEl.addEventListener("submit", taskFormHandler);
+
+// for edit and delete buttons
 pageContentEl.addEventListener("click", taskButtonHandler);
 
+// for changing the status
 pageContentEl.addEventListener("change", taskStatusChangeHandler);
 
 loadTasks();
